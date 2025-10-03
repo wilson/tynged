@@ -1,8 +1,8 @@
 ### Tynged
 
-_tynged_ (TUNG-ed)
-Noun: fate, destiny
-Verb: to swear an oath
+_tynged_ (TUNG-ed)  
+Noun: fate, destiny  
+Verb: to swear an oath  
 
 This was always going to happen.
 
