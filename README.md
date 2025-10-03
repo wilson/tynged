@@ -25,7 +25,7 @@ This was always going to happen.
 ### Definitions
 - **Sources**: Where untrusted data originates (e.g., HTTP requests, file I/O).
 - **Sinks**: Sensitive operations where untrusted data can cause harm (e.g., database queries, shell execution, HTML rendering).
-- **Taint**: A marker applied to data indicating its trust level.
+- **Context**: A marker applied to data indicating its trust level.
 - **Sanitization**: The explicit process of validating or escaping data to remove its taint.
 
 ### Type-Guided Safety
