@@ -90,7 +90,7 @@ fn handle_request(input: UserInput) {
                   found struct `Tyng<String, SqlSafe>`
     */
 
-    // --- SUCCESS: Context mtches Sink ---
+    // --- SUCCESS: Context matches Sink ---
     // The compiler guides us to use the correct transformations.
     let html_data = input.username.encode_html(); // UserRaw -> HtmlSafe
     render_html(html_data);
