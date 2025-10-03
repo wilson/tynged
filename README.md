@@ -61,11 +61,8 @@ fn execute_query(query_part: Tyng<String, SqlSafe>) {
 
 // --- 3. Usage ---
 fn handle_request(input: UserInput) {
-
-    // --- ATTEMPT 1: Using Raw Data (Preventing XSS) ---
-    // A developer attempts to use raw user input directly in a sensitive sink.
-
-    // render_html(input.username);
+    // --- ATTEMPT 1: Using raw data (XSS) ---
+    render_html(input.username);
     /*
     error[E0308]: mismatched types
       --> src/main.rs:40:17
@@ -78,13 +75,12 @@ fn handle_request(input: UserInput) {
     */
 
 
-    // --- ATTEMPT 2: Using the Wrong Context (The Crucial Test) ---
-    // The developer sanitizes the data, but uses the WRONG sanitizer
+    // --- ATTEMPT 2: Using the wrong context---
+    // The developer sanitizes the data, but uses the incorrect sanitizer
     // for the destination sink. They escape for SQL but send it to HTML.
-
     let sql_data = input.username.encode_sql(); // UserRaw -> SqlSafe
 
-    // render_html(sql_data);
+    render_html(sql_data);
     /*
     error[E0308]: mismatched types
       --> src/main.rs:60:17
@@ -96,8 +92,7 @@ fn handle_request(input: UserInput) {
                   found struct `Tyng<String, SqlSafe>`
     */
 
-
-    // --- SUCCESS: Context Matches Sink ---
+    // --- SUCCESS: Context mtches Sink ---
     // The compiler guides us to use the correct transformations.
     let html_data = input.username.encode_html(); // UserRaw -> HtmlSafe
     render_html(html_data);
