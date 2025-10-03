@@ -5,6 +5,7 @@ This was always going to happen.
 ### Mission
 
 > Build the most ergonomic, feature-complete, and trustworthy macro-based taint-tracking framework for production use in Rust.
+> Tynged uses compile-time taint tracking to prevent data from untrusted sources from contaminating sensitive sinks, eliminating vulnerabilities like SQL injection, command injection, and XSS.
 
 ### Desired Properties
 
@@ -18,4 +19,5 @@ This was always going to happen.
 ### Non-Features
 
 - Extensive backwards-compatibility with older Rust.
+- Preventing implicit leaks via control flow, unless someone has an amazing idea.
 - Anything lame.
