@@ -74,12 +74,10 @@ fn handle_request(input: UserInput) {
                   found struct `Tyng<String, UserRaw>`
     */
 
-
     // --- ATTEMPT 2: Using the wrong context---
     // The developer sanitizes the data, but uses the incorrect sanitizer
     // for the destination sink. They escape for SQL but send it to HTML.
     let sql_data = input.username.encode_sql(); // UserRaw -> SqlSafe
-
     render_html(sql_data);
     /*
     error[E0308]: mismatched types
