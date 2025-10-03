@@ -1,7 +1,7 @@
 # Cargo build artifacts
 /target/
 
-# A crate is a library. Don't commit the lockfile.
+# This crate is a library. Don't commit the lockfile.
 /Cargo.lock
 
 # rustfmt backups
