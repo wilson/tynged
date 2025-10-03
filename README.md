@@ -11,7 +11,7 @@ This was always going to happen.
 
 ### Desired Properties
 - Purely macro-based, with zero runtime overhead.
-- Ergonomic, no incentives not to use it. Relatively terse, e.g. `Tyng<T, UserRaw>`.
+- Ergonomic, no incentives not to use it. Relatively terse, e.g. `Tyng<T, Context>`.
 - A suite of attribute and derive macros to make the process of tainting sources and sanitizing sinks as seamless as possible.
 - Trustworthy and detailed documentation.
 - Compile-time errors that are precise, helpful, and feel native to the Rust compiler, e.g. investigate `syn` and `proc-macro2`.
