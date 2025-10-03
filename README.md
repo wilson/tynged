@@ -8,8 +8,8 @@ This was always going to happen.
 
 ### Mission
 
-> Build the most ergonomic, feature-complete, and trustworthy macro-based taint-tracking framework for production use.
-> Tynged uses compile-time taint tracking to prevent data from untrusted sources from contaminating sensitive sinks, eliminating vulnerabilities like SQL injection, command injection, and XSS.
+> Build the most ergonomic, feature-complete, and trustworthy macro-based taint-tracking framework for production use.  
+> Tynged uses compile-time taint tracking to prevent data from untrusted sources from contaminating sensitive sinks, eliminating vulnerabilities like SQL injection, command injection, and XSS.  
 
 ### Desired Properties
 
