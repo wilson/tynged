@@ -6,8 +6,8 @@ Verb: to swear an oath
 This was always going to happen.
 
 ### Mission
-> Build the most ergonomic, feature-complete, and trustworthy macro-based taint-tracking framework for production use.  
-> Tynged uses compile-time taint tracking to prevent data from untrusted sources from contaminating sensitive sinks, eliminating vulnerabilities like SQL injection, command injection, and XSS.  
+> Build the most ergonomic, feature-complete, and trustworthy macro-based framework for enforcing context-aware security guarantees at compile time.  
+> Tynged ensures that data is correctly sanitized and encoded for its intended context (e.g., SQL, HTML, Shell), eliminating injection vulnerabilities.
 
 ### Desired Properties
 - Purely macro-based, with zero runtime overhead.
@@ -28,28 +28,81 @@ This was always going to happen.
 - **Taint**: A marker applied to data indicating its trust level.
 - **Sanitization**: The explicit process of validating or escaping data to remove its taint.
 
-### Hypothetical Interface
+### Type-Guided Safety
+
+Tynged uses Rust's type system to track the context for which data is safe.  
+The question is not "is this data trusted?"
+Instead we ask, "is this data correctly encoded for where it is going?"
+This approach prevents vulnerabilities caused by applying the wrong type of sanitization.
 
 ```rust
-use tynged::{Tyng, Untrusted, Trusted};
+// We use marker types (Contexts) to represent the state of the data.
+use tynged::{Tyng, context::{UserRaw, HtmlSafe, SqlSafe}};
 
-// [Source] Data coming from a web request (Tainted)
+// --- 1. Sources ---
+// Data originating from an external source is explicitly typed as 'UserRaw'.
 #[derive(Deserialize)]
 struct UserInput {
-    username: Tyng<String, Untrusted>,
+    username: Tyng<String, UserRaw>,
 }
 
-// [Sink] A sensitive operation that requires sanitized input
-fn execute_query(query: Tyng<String, Trusted>) {
-    // ...
+// --- 2. Sinks ---
+// Sinks explicitly declare the security context they require.
+
+/// Requires data explicitly encoded for HTML output.
+fn render_html(content: Tyng<String, HtmlSafe>) {
+    // ... render page ...
 }
 
-fn handler(input: UserInput) {
-    // Fails to compile: expected `Trusted`, found `Untrusted`
-    // execute_query(input.username);
+/// Requires data explicitly escaped or parameterized for SQL queries.
+fn execute_query(query_part: Tyng<String, SqlSafe>) {
+    // ... execute query ...
+}
 
-    // [Sanitization] Success: Data has been explicitly validated
-    let sanitized = input.username.sanitize_with(my_sql_escaper);
-    execute_query(sanitized);
+// --- 3. Usage ---
+fn handle_request(input: UserInput) {
+
+    // --- ATTEMPT 1: Using Raw Data (Preventing XSS) ---
+    // A developer attempts to use raw user input directly in a sensitive sink.
+
+    // render_html(input.username);
+    /*
+    error[E0308]: mismatched types
+      --> src/main.rs:40:17
+       |
+    40 |     render_html(input.username);
+       |                 ^^^^^^^^^^^^^^ expected `HtmlSafe`, found `UserRaw`
+       |
+       = note: expected struct `Tyng<String, HtmlSafe>`
+                  found struct `Tyng<String, UserRaw>`
+    */
+
+
+    // --- ATTEMPT 2: Using the Wrong Context (The Crucial Test) ---
+    // The developer sanitizes the data, but uses the WRONG sanitizer
+    // for the destination sink. They escape for SQL but send it to HTML.
+
+    let sql_data = input.username.encode_sql(); // UserRaw -> SqlSafe
+
+    // render_html(sql_data);
+    /*
+    error[E0308]: mismatched types
+      --> src/main.rs:60:17
+       |
+    60 |     render_html(sql_data);
+       |                 ^^^^^^^^ expected `HtmlSafe`, found `SqlSafe`
+       |
+       = note: expected struct `Tyng<String, HtmlSafe>`
+                  found struct `Tyng<String, SqlSafe>`
+    */
+
+
+    // --- SUCCESS: Context Matches Sink ---
+    // The compiler guides us to use the correct transformations.
+    let html_data = input.username.encode_html(); // UserRaw -> HtmlSafe
+    render_html(html_data);
+
+    // And we can reuse the correctly encoded SQL data from above.
+    execute_query(sql_data);
 }
 ```
