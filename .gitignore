@@ -1,0 +1,19 @@
+# Cargo build artifacts
+/target/
+
+# A crate is a library. Don't commit the lockfile.
+/Cargo.lock
+
+# rustfmt backups
+**/*.rs.bk
+
+# cargo-mutants output
+**/mutants.out*/
+
+# Code coverage reports
+/lcov.info
+/cov/
+*.profraw
+
+# Windows (MSVC)
+*.pdb
