@@ -1,8 +1,8 @@
+# You should ignore things like .DS_Store on your Mac, and your editor's temp files, in your ~/.gitignore
+# Let's not collect a master list of every kind of cruft in the world in this file.
+
 # Cargo build artifacts
 /target/
-
-# This crate is a library. Don't commit the lockfile.
-/Cargo.lock
 
 # rustfmt backups
 **/*.rs.bk
